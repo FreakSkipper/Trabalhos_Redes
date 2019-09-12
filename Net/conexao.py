@@ -1,5 +1,5 @@
 import socket
-
+import traceback
 
 class ConexaoHttp:
     mysock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -11,14 +11,20 @@ class ConexaoHttp:
         self.mensagem = 'GET / HTTP/1.1\r\nHost:'+self.HOST+'\r\n\r\n'
 
     def conectar(self, timeout):
+        valor_ret = False
         try:
             self.mysock.connect((self.HOST, self.PORT))
-        except:
-            return 0
+            print("Sucesso ao conectar!")
+        except Exception:
+            self.mysock.close()
+            print("Falha ao tentar conectar!")
+            traceback.print_exc()
         else:
             self.mysock.sendall(self.mensagem.encode())
             self.mysock.settimeout(timeout)
-            return 1
+            valor_ret = True
+
+        return valor_ret
 
     def getHTML(self):
         self.html = b""
@@ -26,8 +32,8 @@ class ConexaoHttp:
             try:
                 self.recebido = self.mysock.recv(1024)
                 self.html = self.html + self.recebido
-            except:
-                print("Conexao Encerrada.")
+            except Exception:
+                traceback.print_exc()
                 break
 
     def encerrar(self):

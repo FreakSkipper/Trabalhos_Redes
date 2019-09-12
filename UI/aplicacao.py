@@ -5,8 +5,7 @@ from Net.conexao import ConexaoHttp
 class Aplicacao:
 
     def entrarSite(self):
-
-        print(self.saveSite.get())
+        print("> " + self.saveSite.get())
         # novo objeto de conexão determinado para o URL
         self.novaConexao = ConexaoHttp(self.saveSite.get())
 
@@ -16,6 +15,7 @@ class Aplicacao:
             self.novaConexao.printHeader()  # printa cabeçalho de conexão
             self.novaConexao.criarHTML()  # cria o arquivo HTML
         else:
+            print("Não foi possível conectar-se nesse endereço.")
             self.labelResposta.configure(text="Não foi possível conectar nesse endereço.")
 
     def __init__(self, nome, largura, altura):
