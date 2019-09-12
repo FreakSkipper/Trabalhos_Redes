@@ -1,6 +1,15 @@
 import tkinter
 from Net.conexao import ConexaoHttp
+import os                   # system calls
+import webbrowser           # usado para abrir no navegador
+from pathlib import Path    # path to workspace
 
+if os.name is ('nt','dos'):
+    OS = "windows"
+    CLEAR = 'cls'
+else:
+    OS = "unix"
+    CLEAR = 'clear'
 
 class Aplicacao:
 
@@ -10,13 +19,38 @@ class Aplicacao:
         self.novaConexao = ConexaoHttp(self.saveSite.get())
 
         if self.novaConexao.conectar(2.0):  # nova conexão com TimeOut 2 segundos
-            self.novaConexao.getHTML()  # pega Informação do Site
-            self.novaConexao.encerrar()  # encerra conexão
-            self.novaConexao.printHeader()  # printa cabeçalho de conexão
-            self.novaConexao.criarHTML()  # cria o arquivo HTML
+            if self.novaConexao.getHTML():  # pega Informação do Site
+                self.novaConexao.encerrar()  # encerra conexão
+                self.novaConexao.printHeader()  # printa cabeçalho de conexão
+                self.novaConexao.criarHTML()  # cria o arquivo HTML
+
+                self.labelResposta.configure(text="Conectado com sucesso!")
+            else:
+                self.labelResposta.configure(text="Tempo de conexão excedido!")
         else:
-            print("Não foi possível conectar-se nesse endereço.")
             self.labelResposta.configure(text="Não foi possível conectar nesse endereço.")
+
+    def abrirBrowser(self):
+        work_path = Path(__file__).parent.absolute()
+        print(work_path)
+
+        aux = len(str(work_path))
+        aux_str = str(work_path)
+        caracter_stop = 0
+        for i in range(aux-1, -1, -1):
+            if OS == "windows":
+                if aux_str[i] == "\\":
+                    caracter_stop = i
+                    break
+            else:
+                if aux_str[i] == "/":
+                    caracter_stop = i
+                    break
+        # print(aux_str[0:caracter_stop] + "\index.html")
+        if OS == "windows":
+            webbrowser.open(aux_str[0:caracter_stop] + "\index.html")
+        else:
+            webbrowser.open(aux_str[0:caracter_stop] + "/index.html")
 
     def __init__(self, nome, largura, altura):
         # cria uma aplicação tkinter ( provavelmente falta o Frame )
@@ -55,8 +89,8 @@ class Aplicacao:
         self.labelResposta = tkinter.Label(self.tela, text="Aguardando conexão..", fg="black", font=("Arial", 10), height=5)
         self.labelResposta.grid(column=0, row=5, pady=(0, 0))
 
-        # Botão para abrir Navegador
-        self.buttonNavegador = tkinter.Button(self.tela, text="Abrir no Navegador")
+        # Botão para abrir Navegador (leva para o método abrirBrowser())
+        self.buttonNavegador = tkinter.Button(self.tela, text="Abrir no Navegador", command=self.abrirBrowser)
         self.buttonNavegador.grid(column=1, row=6, padx=10, sticky=tkinter.E)
 
         # roda loop de apresentação

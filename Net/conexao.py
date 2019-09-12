@@ -2,7 +2,6 @@ import socket
 import traceback
 
 class ConexaoHttp:
-    mysock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     PORT = 80
     html = b""
 
@@ -13,10 +12,11 @@ class ConexaoHttp:
     def conectar(self, timeout):
         valor_ret = False
         try:
+            self.mysock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)     # refazer soket toda vez
             self.mysock.connect((self.HOST, self.PORT))
             print("Sucesso ao conectar!")
         except Exception:
-            self.mysock.close()
+            # self.mysock.close()
             print("Falha ao tentar conectar!")
             traceback.print_exc()
         else:
@@ -28,6 +28,8 @@ class ConexaoHttp:
 
     def getHTML(self):
         self.html = b""
+        valor_ret = False
+       
         while True:
             try:
                 self.recebido = self.mysock.recv(1024)
@@ -35,6 +37,10 @@ class ConexaoHttp:
             except Exception:
                 traceback.print_exc()
                 break
+            else:
+                valor_ret = True
+
+        return valor_ret
 
     def encerrar(self):
         self.mysock.close()
