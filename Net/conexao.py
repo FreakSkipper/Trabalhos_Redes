@@ -50,6 +50,8 @@ class ConexaoHttp:
         print('Header length', self.pos)
         print(self.html[:self.pos].decode())
 
+        return self.html[:self.pos].decode()
+
     def criarHTML(self):
         self.fhand = open("index.html", "wb")
         self.fhand.write(self.html[self.pos+8:])

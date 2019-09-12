@@ -1,4 +1,4 @@
 
 from UI.aplicacao import Aplicacao
 
-app = Aplicacao("Cliente HTTP", 750, 600)
+app = Aplicacao("Cliente HTTP", 1024, 576)
