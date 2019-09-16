@@ -14,20 +14,22 @@ else:
 class Aplicacao:
 
     def entrarSite(self):
-        print("> " + self.saveSite.get())
         print(self.tela.winfo_height())
         print(self.tela.winfo_width())
 
         # novo objeto de conexão determinado para o URL
         self.novaConexao = ConexaoHttp(self.saveSite.get())
         self.header = ""
+
         if self.novaConexao.conectar(2.0):  # nova conexão com TimeOut 2 segundos
             if self.novaConexao.getHTML():  # pega Informação do Site
                 self.novaConexao.encerrar()  # encerra conexão
                 self.header = self.novaConexao.printHeader()  # printa cabeçalho de conexão
                 
                 self.textTerminal.config(state=tkinter.NORMAL)  # permitir a escrita
+                self.textTerminal.delete("1.0", tkinter.END)
                 self.textTerminal.insert(tkinter.END, self.header)
+                
                 self.textTerminal.config(state=tkinter.DISABLED)    # tornar ready only
                 
                 self.novaConexao.criarHTML()  # cria o arquivo HTML
@@ -91,15 +93,18 @@ class Aplicacao:
         self.topContainer = tkinter.Frame(self.myContainerMain)
         self.topContainer.pack(side=tkinter.TOP, fill=tkinter.BOTH,
             expand=tkinter.YES)
-
-        self.bottomContainer = tkinter.Frame(self.myContainerMain)
-        self.bottomContainer.pack(side=tkinter.BOTTOM, fill=tkinter.BOTH,
-            expand=tkinter.YES)
         
         # --- frames internos
         self.left_midle_frame = tkinter.Frame(self.topContainer)
         self.left_midle_frame.pack(side=tkinter.LEFT, fill=tkinter.BOTH,
-            expand=tkinter.YES)
+            expand=tkinter.YES, pady = (0, 0))
+
+        self.left_midle_frame2 = tkinter.Frame(self.left_midle_frame)
+        self.left_midle_frame2.pack(side=tkinter.TOP)
+
+        self.bottomContainer = tkinter.Frame(self.left_midle_frame)
+        self.bottomContainer.pack(side=tkinter.BOTTOM, fill=tkinter.BOTH,
+            expand=tkinter.YES, pady = (100, 0), padx = (180,0))
 
         self.right_midle_frame = tkinter.Frame(self.topContainer)
         self.right_midle_frame.pack(side=tkinter.RIGHT, fill=tkinter.BOTH,
@@ -109,41 +114,40 @@ class Aplicacao:
         self.imageRedes = tkinter.PhotoImage(file="UI/images/redes.png")
         self.imageRedes.zoom(32)        # multiplies for 64
         self.imageRedes.subsample(157)  # divison for 157 (original size 157px)
-        self.labelRedes = tkinter.Label(self.titleContainer, image=self.imageRedes, anchor=tkinter.NW)
-        self.labelRedes.pack(side=tkinter.LEFT)
+        self.labelRedes = tkinter.Label(self.titleContainer, image=self.imageRedes)
+        self.labelRedes.pack(side=tkinter.LEFT, anchor=tkinter.NW)
         #self.labelRedes.place(relx = 0.5, rely = 0.2)
         
         # Label UnB
-        self.labelUnb = tkinter.Label(self.titleContainer, text="UnB", fg="blue", font=("Arial", 16, "bold"), 
-            anchor=tkinter.NW)
-        self.labelUnb.pack(side=tkinter.LEFT, padx="20px")
+        self.labelUnb = tkinter.Label(self.titleContainer, text="UnB", fg="blue", font=("Arial", 16, "bold"))
+        self.labelUnb.pack(padx="20px", side = tkinter.LEFT)
 
 
         # Label URL
-        self.labelUrl = tkinter.Label(self.left_midle_frame, text="URL", width=6)
+        self.labelUrl = tkinter.Label(self.left_midle_frame2, text="URL", width=6)
         self.labelUrl.pack(side=tkinter.LEFT)
 
         # Entrada de Link
         self.saveSite = tkinter.StringVar()
-        self.entrySite = tkinter.Entry(self.left_midle_frame, width=60, textvariable=self.saveSite)
+        self.entrySite = tkinter.Entry(self.left_midle_frame2, width=60, textvariable=self.saveSite)
         self.entrySite.pack(side=tkinter.LEFT, padx='10px', expand=tkinter.YES)
 
         # Botão para Iniciar Entrada ( leva para o método entrarSite() )
-        self.buttonEntrar = tkinter.Button(self.left_midle_frame, text="Conectar", command=self.entrarSite)
+        self.buttonEntrar = tkinter.Button(self.left_midle_frame2, text="Conectar", command=self.entrarSite)
         self.buttonEntrar.pack(side=tkinter.LEFT)
 
         # Label Saída Console
-        self.labelOutput = tkinter.Label(self.bottomContainer, text="Console", fg="red", font=("Arial", 12, "bold"), pady=0.4)
+        self.labelOutput = tkinter.Label(self.bottomContainer, text="Console", fg="red", font=("Arial", 12, "bold"))
         self.labelOutput.grid(column=0, row=0)
 
         # Label de Resposta Console
         self.labelResposta = tkinter.Label(self.bottomContainer, text="Aguardando conexão..", fg="black",
-            font=("Arial", 10), height=5)
-        self.labelResposta.grid(column=0, row=1, padx="30px")
+            font=("Arial", 10), height=1)
+        self.labelResposta.grid(column=0, row=1)
 
         # Botão para abrir Navegador (leva para o método abrirBrowser())
         self.buttonNavegador = tkinter.Button(self.bottomContainer, text="Abrir no Navegador", command=self.abrirBrowser)
-        self.buttonNavegador.grid(column=1, row=1)
+        self.buttonNavegador.grid(column=0, row=2)
 
         # Text saída terminal
         self.sb = tkinter.Scrollbar(self.right_midle_frame)
