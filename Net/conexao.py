@@ -1,6 +1,7 @@
 import socket
 import traceback
 
+
 class ConexaoHttp:
     PORT = 80
     html = b""
@@ -10,7 +11,6 @@ class ConexaoHttp:
         self.mensagem = 'GET / HTTP/1.1\r\nHost:'+self.HOST+'\r\n\r\n'
 
     def conectar(self, timeout):
-        print("> " + self.HOST + " [" + socket.gethostbyname(self.HOST) + "]")
         valor_ret = False
         
         try:
@@ -32,7 +32,7 @@ class ConexaoHttp:
     def getHTML(self):
         self.html = b""
         valor_ret = False
-       
+      
         while True:
             try:
                 self.recebido = self.mysock.recv(1024)
