@@ -1,6 +1,7 @@
 import tkinter
 from Net.conexao import ConexaoHttp
-import platform                   # system calls
+import platform                   # system info
+import os                         # system call
 import webbrowser           # usado para abrir no navegador
 from pathlib import Path    # path to workspace
 
@@ -14,6 +15,7 @@ else:
 class Aplicacao:
 
     def entrarSite(self):
+        os.system(CLEAR)
         print("> Window size: " + str(self.tela.winfo_width()) + "x" + str(self.tela.winfo_height()))
 
         # novo objeto de conexão determinado para o URL

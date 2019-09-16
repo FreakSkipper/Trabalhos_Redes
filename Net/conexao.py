@@ -10,11 +10,11 @@ class ConexaoHttp:
         self.mensagem = 'GET / HTTP/1.1\r\nHost:'+self.HOST+'\r\n\r\n'
 
     def conectar(self, timeout):
-        print("> Endereço: " + str(self.HOST) + " [" + socket.gethostbyname(self.HOST) + "]")
         valor_ret = False
         try:
             self.mysock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)     # refazer soket toda vez
             self.mysock.connect((self.HOST, self.PORT))
+            print("> Endereço: " + str(self.HOST) + " [" + socket.gethostbyname(self.HOST) + "]")
             print("Sucesso ao conectar!")
         except Exception:
             # self.mysock.close()
