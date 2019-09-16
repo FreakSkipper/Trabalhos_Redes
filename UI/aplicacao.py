@@ -21,13 +21,16 @@ class Aplicacao:
         # novo objeto de conexão determinado para o URL
         self.novaConexao = ConexaoHttp(self.saveSite.get())
         self.header = ""
+
         if self.novaConexao.conectar(2.0):  # nova conexão com TimeOut 2 segundos
             if self.novaConexao.getHTML():  # pega Informação do Site
                 self.novaConexao.encerrar()  # encerra conexão
                 self.header = self.novaConexao.printHeader()  # printa cabeçalho de conexão
                 
                 self.textTerminal.config(state=tkinter.NORMAL)  # permitir a escrita
+                self.textTerminal.delete("1.0", tkinter.END)
                 self.textTerminal.insert(tkinter.END, self.header)
+                
                 self.textTerminal.config(state=tkinter.DISABLED)    # tornar ready only
                 
                 self.novaConexao.criarHTML()  # cria o arquivo HTML
